@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/logo.png" width="280" alt="Brilliant Local logo"></p>
+
 # Brilliant Local
 
 Local Home Assistant control of Brilliant Control panels — no HomeKit, no MQTT, no cloud.
