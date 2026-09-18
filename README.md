@@ -35,10 +35,20 @@ Each load is its own HA device, nested under its panel's device.
 
    It installs to `/var/brilliant-local` (survives firmware updates), creates a random token at
    `/var/brilliant-local/token`, and runs `brilliant-local.service` capped at 64 MB / 15% CPU.
-   It also installs `brilliant-local-wifi.timer`, which keeps Wi-Fi power save off (re-applied at boot
-   and every 5 minutes). With power save on, the panel's radio dozes: pings to the router measured
-   83 ms average / 1 s worst vs 9 ms / 32 ms with it off, and peer links between panels suffer.
-   Run the installer on every panel, not just the one hosting the agent, to fix power save everywhere.
+
+   **Optional — Wi-Fi power save** (`--wifi-powersave-off`): installs `brilliant-local-wifi.timer`,
+   which keeps that panel's Wi-Fi power save off (re-applied at boot and every 5 minutes). With power
+   save on, the radio dozes: on one panel, pings to the router measured 83 ms average / 1 s worst vs
+   9 ms / 32 ms with it off, and links between panels suffer. It only affects the panel you run it
+   against, so to apply it elsewhere run it per panel without a second agent:
+
+   ```sh
+   SSHPASS='<password>' deploy/install_agent.sh --wifi-powersave-off <agent-panel-ip>
+   SSHPASS='<password>' deploy/install_agent.sh --no-agent --wifi-powersave-off <other-panel-ip>
+   ```
+
+   To undo it: `systemctl disable --now brilliant-local-wifi.timer && iw dev wlan0 set power_save on`.
+
    Port 61172 is used because the panel firewall only admits ports ≥ 32768; it sits above the
    ephemeral range (32768–60999) so it cannot collide with outgoing connections.
 
