@@ -5,3 +5,5 @@ __pycache__/
 .ruff_cache/
 /logo.png
 .DS_Store
+/logo1.png
+custom_components/brilliant_local/logo.png
