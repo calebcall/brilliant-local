@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to a Brilliant Local agent",
+        "description": "Enter the address of the Brilliant panel running the agent and the agent token (stored at /var/brilliant-local/token on the panel).",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the agent.",
+      "invalid_auth": "The agent rejected the token.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This agent is already configured."
+    }
+  }
+}
