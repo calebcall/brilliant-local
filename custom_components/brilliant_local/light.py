@@ -11,7 +11,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import BrilliantConfigEntry
 from .client import BrilliantError
-from .entity import BrilliantLoadEntity
+from .entity import BrilliantLoadEntity, panel_registry_id
 
 
 async def async_setup_entry(
@@ -27,7 +27,7 @@ async def async_setup_entry(
                 key = (panel["id"], load["id"])
                 if load["kind"] in ("light", "switch") and key not in known:
                     known.add(key)
-                    new.append(BrilliantLight(client, panel, load["id"]))
+                    new.append(BrilliantLight(client, panel, load["id"], panel_registry_id(hass, panel["id"])))
         if new:
             async_add_entities(new)
 
@@ -38,8 +38,8 @@ async def async_setup_entry(
 class BrilliantLight(BrilliantLoadEntity, LightEntity):
     _attr_name = None
 
-    def __init__(self, client, panel: dict[str, Any], load_id: str) -> None:
-        super().__init__(client, panel["id"], load_id)
+    def __init__(self, client, panel: dict[str, Any], load_id: str, via_device_id: str | None) -> None:
+        super().__init__(client, panel["id"], load_id, via_device_id)
         self._attr_unique_id = f"{panel['id']}_{load_id}"
 
     @property

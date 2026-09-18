@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity
 
@@ -19,6 +21,12 @@ def panel_device_info(panel: dict[str, Any]) -> DeviceInfo:
         model=f"Brilliant Control ({len(panel['loads'])}-gang)",
         sw_version=panel.get("firmware"),
     )
+
+
+def panel_registry_id(hass: HomeAssistant, panel_id: str) -> str | None:
+    """Device-registry id of a panel (registered in async_setup_entry before any platform)."""
+    device = dr.async_get(hass).async_get_device(identifiers={(DOMAIN, panel_id)})
+    return device.id if device else None
 
 
 class BrilliantEntity(Entity):
@@ -46,7 +54,7 @@ class BrilliantEntity(Entity):
 class BrilliantLoadEntity(BrilliantEntity):
     """An entity attached to one load (gang); each load is its own device under its panel."""
 
-    def __init__(self, client: BrilliantClient, panel_id: str, load_id: str) -> None:
+    def __init__(self, client: BrilliantClient, panel_id: str, load_id: str, via_device_id: str | None) -> None:
         super().__init__(client, panel_id)
         self.load_id = load_id
         load = self.load or {}
@@ -55,8 +63,9 @@ class BrilliantLoadEntity(BrilliantEntity):
             name=load.get("name", load_id),
             manufacturer="Brilliant",
             model="Brilliant Control load",
-            via_device=(DOMAIN, panel_id),
         )
+        if via_device_id is not None:
+            self._attr_device_info["via_device_id"] = via_device_id
 
     @property
     def load(self) -> dict[str, Any] | None:
