@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install or update the Brilliant Local agent on one panel.
+# Install or update the Brilliantly Local agent on one panel.
 # Usage: SSHPASS='<panel root password>' ./install_agent.sh <panel-ip>
 set -euo pipefail
 host="${1:?usage: SSHPASS=... $0 <panel-ip>}"

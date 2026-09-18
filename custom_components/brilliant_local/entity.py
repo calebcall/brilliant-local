@@ -1,4 +1,4 @@
-"""Base entities for Brilliant Local."""
+"""Base entities for Brilliantly Local."""
 
 from __future__ import annotations
 

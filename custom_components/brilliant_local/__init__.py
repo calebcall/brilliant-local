@@ -1,4 +1,4 @@
-"""Brilliant Local: control Brilliant panels through the on-panel agent, without HomeKit or MQTT."""
+"""Brilliantly Local: control Brilliant panels through the on-panel agent, without HomeKit or MQTT."""
 
 from __future__ import annotations
 

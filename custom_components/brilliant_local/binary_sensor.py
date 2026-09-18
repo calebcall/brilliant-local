@@ -1,4 +1,4 @@
-"""Motion and connectivity sensors for Brilliant Local."""
+"""Motion and connectivity sensors for Brilliantly Local."""
 
 from __future__ import annotations
 

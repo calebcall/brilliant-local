@@ -1,4 +1,4 @@
-"""Config flow for Brilliant Local."""
+"""Config flow for Brilliantly Local."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ class BrilliantLocalConfigFlow(ConfigFlow, domain=DOMAIN):
             else:
                 await self.async_set_unique_id(hello["agent_panel"])
                 self._abort_if_unique_id_configured(updates={CONF_HOST: user_input[CONF_HOST]})
-                return self.async_create_entry(title=f"Brilliant ({user_input[CONF_HOST]})", data=user_input)
+                return self.async_create_entry(title=f"Brilliantly Local ({user_input[CONF_HOST]})", data=user_input)
         return self.async_show_form(
             step_id="user", data_schema=self.add_suggested_values_to_schema(SCHEMA, user_input), errors=errors
         )

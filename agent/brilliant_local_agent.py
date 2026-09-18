@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Brilliant Local agent.
+"""Brilliantly Local agent.
 
 Runs on a Brilliant Control panel and exposes the home's panel loads over a
 small newline-delimited JSON protocol on TCP, for the `brilliant_local` Home

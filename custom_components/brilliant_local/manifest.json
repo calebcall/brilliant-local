@@ -1,6 +1,6 @@
 {
   "domain": "brilliant_local",
-  "name": "Brilliant Local",
+  "name": "Brilliantly Local",
   "codeowners": [
     "@calebcall"
   ],
@@ -10,5 +10,5 @@
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/calebcall/brilliant-local/issues",
   "requirements": [],
-  "version": "0.1.3"
+  "version": "0.1.4"
 }

@@ -1,4 +1,4 @@
-"""Constants for the Brilliant Local integration."""
+"""Constants for the Brilliantly Local integration."""
 
 DOMAIN = "brilliant_local"
 DEFAULT_PORT = 61172

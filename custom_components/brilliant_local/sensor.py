@@ -1,4 +1,4 @@
-"""Power sensors for Brilliant Local."""
+"""Power sensors for Brilliantly Local."""
 
 from __future__ import annotations
 

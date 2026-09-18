@@ -1,6 +1,6 @@
-<p align="center"><img src="docs/logo.png" width="280" alt="Brilliant Local logo"></p>
+<p align="center"><img src="docs/logo.png" width="280" alt="Brilliantly Local logo"></p>
 
-# Brilliant Local
+# Brilliantly Local
 
 Local Home Assistant control of Brilliant Control panels — no HomeKit, no MQTT, no cloud.
 
@@ -39,7 +39,7 @@ Each load is its own HA device, nested under its panel's device.
    ephemeral range (32768–60999) so it cannot collide with outgoing connections.
 
 2. **Integration**: copy `custom_components/brilliant_local` into your HA `config/custom_components/`,
-   restart HA, then *Settings → Devices & services → Add integration → Brilliant Local* and enter the
+   restart HA, then *Settings → Devices & services → Add integration → Brilliantly Local* and enter the
    panel IP, port `61172`, and the token.
 
 ## How it works / findings

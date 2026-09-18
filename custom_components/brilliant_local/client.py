@@ -1,4 +1,4 @@
-"""Async client for the on-panel Brilliant Local agent (newline-delimited JSON over TCP).
+"""Async client for the on-panel Brilliantly Local agent (newline-delimited JSON over TCP).
 
 Kept free of Home Assistant imports so it can be tested standalone.
 """

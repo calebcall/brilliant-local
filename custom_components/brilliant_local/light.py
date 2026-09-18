@@ -1,4 +1,4 @@
-"""Lights for Brilliant Local."""
+"""Lights for Brilliantly Local."""
 
 from __future__ import annotations
 

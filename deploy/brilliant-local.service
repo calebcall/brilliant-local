@@ -1,5 +1,5 @@
 [Unit]
-Description=Brilliant Local agent (message bus -> JSON/TCP for Home Assistant)
+Description=Brilliantly Local agent (message bus -> JSON/TCP for Home Assistant)
 After=message_bus.service network-online.target
 Wants=message_bus.service
 
