@@ -72,3 +72,7 @@ python3 agent/test_agent.py
 ```
 
 Credit: bus connection recipe from [joyfulhouse/brilliant-mqtt](https://github.com/joyfulhouse/brilliant-mqtt) (MIT).
+
+## License
+
+MIT — see [LICENSE.md](LICENSE.md).
