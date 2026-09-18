@@ -1,0 +1,9 @@
+[Unit]
+Description=Brilliant Local: re-apply Wi-Fi power save off periodically
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

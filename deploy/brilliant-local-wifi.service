@@ -1,0 +1,7 @@
+[Unit]
+Description=Brilliant Local: keep Wi-Fi power save off (reduces latency and dropped panel links)
+
+[Service]
+Type=oneshot
+# Best effort: a missing iw or interface must never fail the unit.
+ExecStart=-/bin/sh -c 'iw dev wlan0 get power_save | grep -q "Power save: off" || iw dev wlan0 set power_save off'
