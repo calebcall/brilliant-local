@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Connect to a Brilliantly Local agent",
-        "description": "Enter the address of the Brilliant panel running the agent and the agent token (stored at /var/brilliant-local/token on the panel).",
+        "description": "Enter the address of the Brilliant panel running the agent and the agent token (stored at /var/brilliant-local/token on the panel). To use agents on more panels, add them afterwards from this integration's Configure menu.",
         "data": {
           "host": "Host",
           "port": "Port",
@@ -17,7 +17,42 @@
       "unknown": "Unexpected error."
     },
     "abort": {
-      "already_configured": "This agent is already configured."
+      "already_configured": "This agent is already configured.",
+      "home_already_configured": "This Brilliant home is already set up. Add this agent from the existing entry's Configure menu instead."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Agents",
+        "description": "Each panel can run its own agent. With an agent on every panel, commands go straight to the panel that owns the light, and other agents take over when one is unreachable.",
+        "menu_options": {
+          "add_agent": "Add an agent on another panel",
+          "remove_agent": "Remove agents"
+        }
+      },
+      "add_agent": {
+        "title": "Add an agent",
+        "description": "Address and token of an agent running on another panel in this home (token at /var/brilliant-local/token on that panel).",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token"
+        }
+      },
+      "remove_agent": {
+        "title": "Remove agents",
+        "data": {
+          "agents": "Agents to remove"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the agent.",
+      "invalid_auth": "The agent rejected the token.",
+      "wrong_home": "That agent belongs to a different Brilliant home.",
+      "agent_already_added": "That agent is already part of this entry.",
+      "unknown": "Unexpected error."
     }
   }
 }

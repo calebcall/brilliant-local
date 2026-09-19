@@ -9,21 +9,31 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 
 from .client import BrilliantClient, CannotConnect
-from .const import CONF_TOKEN, DOMAIN
+from .const import CONF_AGENTS, CONF_HOME_ID, CONF_TOKEN, DOMAIN
 from .entity import panel_device_info
+from .hub import BrilliantHub
 
 PLATFORMS = [Platform.BINARY_SENSOR, Platform.LIGHT, Platform.SENSOR]
 
-type BrilliantConfigEntry = ConfigEntry[BrilliantClient]
+type BrilliantConfigEntry = ConfigEntry[BrilliantHub]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: BrilliantConfigEntry) -> bool:
-    client = BrilliantClient(entry.data[CONF_HOST], entry.data[CONF_PORT], entry.data[CONF_TOKEN])
+    # The entry's own agent plus any extra agents added in the options flow.
+    agents = [entry.data, *entry.options.get(CONF_AGENTS, [])]
+    hub = BrilliantHub([BrilliantClient(a[CONF_HOST], a[CONF_PORT], a[CONF_TOKEN]) for a in agents])
     try:
-        await client.start()
+        await hub.start()
     except CannotConnect as err:
         raise ConfigEntryNotReady(str(err)) from err
-    entry.runtime_data = client
+    entry.runtime_data = hub
+
+    # Entries created before multi-agent support don't record their home; backfill it
+    # so the config flow can steer additional agents for the same home into options.
+    if CONF_HOME_ID not in entry.data:
+        home_id = next((c.hello.get("home_id") for c in hub.clients if c.hello.get("home_id")), None)
+        if home_id:
+            hass.config_entries.async_update_entry(entry, data={**entry.data, CONF_HOME_ID: home_id})
 
     # Panel devices must exist before per-load devices reference them via `via_device_id`.
     registry = dr.async_get(hass)
@@ -48,7 +58,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: BrilliantConfigEntry) ->
         synced[identifier] = (name, sw_version)
 
     def on_update() -> None:
-        for panel in list(client.panels.values()):
+        for panel in list(hub.panels.values()):
             if panel["id"] not in registered:
                 registered.add(panel["id"])
                 registry.async_get_or_create(config_entry_id=entry.entry_id, **panel_device_info(panel))
@@ -57,7 +67,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: BrilliantConfigEntry) ->
                 sync_device(f"{panel['id']}_{load['id']}", load["name"])
 
     on_update()
-    entry.async_on_unload(client.add_listener(on_update))
+    entry.async_on_unload(hub.add_listener(on_update))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 

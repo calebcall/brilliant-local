@@ -92,9 +92,23 @@ class BrilliantClient:
         finally:
             writer.close()
 
+    @property
+    def agent_panel(self) -> str | None:
+        """Id of the panel this agent runs on (known once connected)."""
+        return self.hello.get("agent_panel")
+
+    def start_background(self) -> None:
+        """Start the connection loop without waiting; it keeps retrying until stopped."""
+        if self._task is None:
+            self._task = asyncio.create_task(self._run(), name=f"brilliant_local {self.host}")
+
+    async def wait_ready(self) -> None:
+        """Wait until the first snapshot has arrived."""
+        await self._first_snapshot.wait()
+
     async def start(self) -> None:
         """Start the background connection loop and wait for the first snapshot."""
-        self._task = asyncio.create_task(self._run(), name=f"brilliant_local {self.host}")
+        self.start_background()
         try:
             await asyncio.wait_for(self._first_snapshot.wait(), CONNECT_TIMEOUT + 5)
         except TimeoutError as err:

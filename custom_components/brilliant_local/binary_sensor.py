@@ -56,7 +56,13 @@ class PanelConnectivity(BrilliantEntity, BinarySensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
         panel = self.panel
-        return None if panel is None else {"last_seen": panel["last_seen"]}
+        if panel is None:
+            return None
+        return {
+            "last_seen": panel["last_seen"],
+            "via_agent": panel.get("via"),
+            "reachable_via": panel.get("reachable_via"),
+        }
 
 
 class PanelMotion(BrilliantEntity, BinarySensorEntity):

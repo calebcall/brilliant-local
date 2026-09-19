@@ -9,7 +9,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import Entity
 
-from .client import BrilliantClient
+from .hub import BrilliantHub
 from .const import DOMAIN
 
 
@@ -35,7 +35,7 @@ class BrilliantEntity(Entity):
     _attr_has_entity_name = True
     _attr_should_poll = False
 
-    def __init__(self, client: BrilliantClient, panel_id: str) -> None:
+    def __init__(self, client: BrilliantHub, panel_id: str) -> None:
         self.client = client
         self.panel_id = panel_id
 
@@ -54,7 +54,7 @@ class BrilliantEntity(Entity):
 class BrilliantLoadEntity(BrilliantEntity):
     """An entity attached to one load (gang); each load is its own device under its panel."""
 
-    def __init__(self, client: BrilliantClient, panel_id: str, load_id: str, via_device_id: str | None) -> None:
+    def __init__(self, client: BrilliantHub, panel_id: str, load_id: str, via_device_id: str | None) -> None:
         super().__init__(client, panel_id)
         self.load_id = load_id
         load = self.load or {}

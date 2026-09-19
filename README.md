@@ -5,11 +5,11 @@
 Local Home Assistant control of Brilliant Control panels — no HomeKit, no MQTT, no cloud.
 
 ```
-Home Assistant ──TCP 61172 (JSON lines, token)──▶ agent on one panel ──▶ panel message bus ──▶ every panel's loads
+Home Assistant ──TCP 61172 (JSON lines, token)──▶ agent on a panel ──▶ panel message bus ──▶ every panel's loads
 ```
 
-- **`agent/`** — `brilliant_local_agent.py`, a standard-library-only Python 3.10 service that runs on one
-  panel. It reads the panel's internal message bus (the same API Brilliant's HomeKit bridge uses), tracks
+- **`agent/`** — `brilliant_local_agent.py`, a standard-library-only Python 3.10 service that runs on a
+  panel (one is enough; one per panel is more robust — see *Multiple agents*). It reads the panel's internal message bus (the same API Brilliant's HomeKit bridge uses), tracks
   every panel in the home, and serves state + commands to Home Assistant.
 - **`custom_components/brilliant_local/`** — the Home Assistant integration (config flow, local push).
 - **`deploy/`** — install script and systemd unit for the agent.
@@ -27,7 +27,7 @@ Each load is its own HA device, nested under its panel's device.
 
 ## Install
 
-1. **Agent** (on one panel; root SSH must be enabled in the panel's settings):
+1. **Agent** (on at least one panel; root SSH must be enabled in the panel's settings):
 
    ```sh
    SSHPASS='<panel root password>' deploy/install_agent.sh <panel-ip>
@@ -56,6 +56,21 @@ Each load is its own HA device, nested under its panel's device.
    restart HA, then *Settings → Devices & services → Add integration → Brilliantly Local* and enter the
    panel IP, port `61172`, and the token.
 
+### Multiple agents
+
+Any single agent sees the whole home, but it can only control another panel while it has a direct
+peer link to it — and on flaky Wi-Fi those links drop. Running an agent on every panel removes that
+dependency:
+
+- Commands go to the agent **on the panel that owns the light**, straight onto its own bus.
+- If that agent is unreachable, or reports no route, the next agent with a link to the panel is used.
+- A panel is shown online while any agent can reach it; its *Online* entity's attributes show which
+  agent is in use (`via_agent`) and every agent that can reach it (`reachable_via`).
+
+Set it up by installing the agent on each panel (step 1), then in HA open the Brilliantly Local entry →
+**Configure → Add an agent on another panel** and enter that panel's IP and token. Keep a single
+integration entry per home; adding a second entry for the same home is refused.
+
 ## How it works / findings
 
 - The bus is Apache Thrift over `/var/run/brilliant/server_socket`. `get_all()` from any panel returns the
@@ -82,7 +97,8 @@ Each load is its own HA device, nested under its panel's device.
 ## Tests
 
 ```sh
-python3 agent/test_agent.py
+python3 agent/test_agent.py              # agent (any Python 3.9+)
+python -m unittest discover -s tests     # integration hub (needs Home Assistant installed)
 ```
 
 Credit: bus connection recipe from [joyfulhouse/brilliant-mqtt](https://github.com/joyfulhouse/brilliant-mqtt) (MIT).
